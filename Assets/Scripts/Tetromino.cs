@@ -5,10 +5,13 @@ using UnityEngine;
 public class Tetromino : MonoBehaviour
 {
     private float previousTime;
-    private float fallTime = 0.8f;
+    private readonly float fallTime = 0.8f;
 
-    private static int width = 10;
-    private static int height = 20;
+    private static readonly int width = 10;
+    private static readonly int height = 20;
+
+    [SerializeField]
+    private Vector3 rotationPoint;
     
     // Start is called before the first frame update
     void Start()
@@ -36,8 +39,16 @@ public class Tetromino : MonoBehaviour
                 transform.position -= new Vector3(1, 0, 0);
             }
         }
+        else if (Input.GetAxisRaw("Vertical") > 0f)
+        {
+            transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90f);
+            if (!IsValidMove())
+            {
+                transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90f);
+            }
+        }
 
-        if(Time.time - previousTime > (Input.GetAxisRaw("Vertical") < 0f ? fallTime/10f : fallTime))
+        if (Time.time - previousTime > (Input.GetAxisRaw("Vertical") < 0f ? fallTime/10f : fallTime))
         {
             transform.position += new Vector3(0, -1, 0);
             if (!IsValidMove())
