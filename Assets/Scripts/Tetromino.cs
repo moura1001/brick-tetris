@@ -54,6 +54,8 @@ public class Tetromino : MonoBehaviour
             if (!IsValidMove())
             {
                 transform.position -= new Vector3(0, -1, 0);
+                this.enabled = false;
+                FindObjectOfType<SpawnTetromino>().NewTetromino();
             }
             previousTime = Time.time;
         }
