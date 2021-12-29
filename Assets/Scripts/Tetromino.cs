@@ -22,7 +22,7 @@ public class Tetromino : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetAxisRaw("Horizontal") < 0f)
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             transform.position += new Vector3(-1, 0, 0);
             if (!IsValidMove())
@@ -31,7 +31,7 @@ public class Tetromino : MonoBehaviour
             }
 
         }
-        else if (Input.GetAxisRaw("Horizontal") > 0f)
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             transform.position += new Vector3(1, 0, 0);
             if (!IsValidMove())
@@ -39,7 +39,7 @@ public class Tetromino : MonoBehaviour
                 transform.position -= new Vector3(1, 0, 0);
             }
         }
-        else if (Input.GetAxisRaw("Vertical") > 0f)
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90f);
             if (!IsValidMove())
@@ -48,7 +48,7 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        if (Time.time - previousTime > (Input.GetAxisRaw("Vertical") < 0f ? fallTime/10f : fallTime))
+        if (Time.time - previousTime > (Input.GetKeyDown(KeyCode.DownArrow) ? fallTime/10f : fallTime))
         {
             transform.position += new Vector3(0, -1, 0);
             if (!IsValidMove())
