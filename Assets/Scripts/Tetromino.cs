@@ -18,7 +18,7 @@ public class Tetromino : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -56,7 +56,10 @@ public class Tetromino : MonoBehaviour
             if (!IsValidMove())
             {
                 transform.position -= new Vector3(0, -1, 0);
+                
                 AddToGrid();
+                CheckForLines();
+
                 this.enabled = false;
                 FindObjectOfType<SpawnTetromino>().NewTetromino();
             }
@@ -93,6 +96,64 @@ public class Tetromino : MonoBehaviour
             int roundedY = Mathf.RoundToInt(children.transform.position.y);
 
             grid[roundedX, roundedY] = children;
+        }
+    }
+
+    private void CheckForLines()
+    {
+        for(int i = height - 1; i >= 0; i--)
+        {
+            if (HasLine(i))
+            {
+                ClearLine(i);
+                RowDown(i);
+            }
+        }
+    }
+
+    private bool HasLine(int i)
+    {
+        for(int j = 0; j < width; j++)
+        {
+            if(grid[j, i] == null)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void ClearLine(int i)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            Transform tetromino = grid[j, i].parent;
+
+            grid[j, i].parent = null;
+            Destroy(grid[j, i].gameObject);
+            grid[j, i] = null;
+
+            if (tetromino.childCount == 0)
+            {
+                Destroy(tetromino.gameObject);
+            }
+        }
+    }
+
+    private void RowDown(int i)
+    {
+        for(int y = i; y < height; y++)
+        {
+            for(int j = 0; j < width; j++)
+            {
+                if(grid[j, y] != null)
+                {
+                    grid[j, y - 1] = grid[j, y];
+                    grid[j, y] = null;
+                    grid[j, y - 1].transform.position -= new Vector3(0, 1, 0);
+                }
+            }
         }
     }
 }
